@@ -1,5 +1,6 @@
 ---
 name: model-limits-audit
+version: 5
 description: Audit GPT and Codex model context windows and max-output limits against live data, and propose descriptor or catalog updates. Use when model limits look stale, after OpenAI ships new models, or on a schedule to catch drift.
 ---
 
