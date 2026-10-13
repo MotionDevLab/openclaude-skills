@@ -1,0 +1,29 @@
+name: validate-skills
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install OpenClaude
+        run: npm install -g @gitlawb/openclaude@latest
+
+      - name: Validate every skill
+        run: |
+          fail=0
+          for dir in skills/*/; do
+            if [ -f "$dir/SKILL.md" ]; then
+              echo "--- validating $dir"
+              openclaude skills validate "$dir" || fail=1
+            fi
+          done
+          exit $fail
