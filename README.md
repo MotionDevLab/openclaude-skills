@@ -13,7 +13,7 @@ This repo holds skills that only make sense inside OpenClaude (or its source tre
 
 | Skill | Version | What it does | Use when |
 |---|---|---|---|
-| `model-limits-audit` | 5 | Diffs hardcoded GPT/Codex `contextWindow` + `maxOutputTokens` against live data and proposes descriptor/catalog fixes. Dry-run by default, writes only with `--apply`. | Model limits look stale, OpenAI ships new models, or on a schedule to catch drift |
+| `model-limits-audit` | 6 | Diffs hardcoded GPT/Codex `contextWindow` + `maxOutputTokens` against live data and proposes descriptor/catalog fixes. Dry-run by default, writes only with `--apply`. | Model limits look stale, OpenAI ships new models, or on a schedule to catch drift |
 
 ## Install
 
