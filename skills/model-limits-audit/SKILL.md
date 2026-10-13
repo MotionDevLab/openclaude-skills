@@ -49,6 +49,9 @@ The resolver is `resolveModelRuntimeLimits` in
 
 ## Files to inventory
 
+Enumerate `src/integrations/models/` dynamically at run time — do NOT trust
+this list as closed (new families like `gpt6.ts` appear without notice):
+
 - `src/integrations/models/gpt.ts` — shared descriptors, including the
   intentional 272k Codex-transport caps
 - `src/integrations/vendors/openai.ts` — direct-OpenAI catalog (full spec)
@@ -76,6 +79,10 @@ The resolver is `resolveModelRuntimeLimits` in
 - NEVER add built-in limits to `src/utils/model/openaiContextWindows.ts` —
   that module is override plumbing only. One-off user pins go to `modelLimits`
   or `/set-context-window --save`.
+- New effort levels (new names like light/ultra, changed ladders) are NOT this
+  skill's scope — route those to the `docs/integrations/reasoning-effort.md`
+  checklist. This skill verifies numbers; control surfaces need their own
+  verification (accepted/rejected levels, wire format, disable format).
 
 ## Procedure
 
