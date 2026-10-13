@@ -79,6 +79,13 @@ The resolver is `resolveModelRuntimeLimits` in
 
 ## Procedure
 
+0. Locate the checkout FIRST. The tables live under
+   `src/integrations/` in an openclaude repo checkout. Check the current
+   working directory for `src/integrations/models/gpt.ts`. If it is absent,
+   STOP and ask the operator for the checkout path — one question, then
+   operate on that path absolutely. NEVER go hunting across the filesystem
+   (`ls` sweeps, directory walks, search tasks); a global install is
+   invocable everywhere precisely so the operator names the target.
 1. Load every repo table listed above into one normalized map.
 2. Fetch the live list and build the lookup map.
 3. Diff per model: repo context vs live, repo max-output vs live, owning
