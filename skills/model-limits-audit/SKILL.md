@@ -1,7 +1,7 @@
 ---
 name: model-limits-audit
-version: 5
-description: Audit GPT and Codex model context windows and max-output limits against live data, and propose descriptor or catalog updates. Use when model limits look stale, after OpenAI ships new models, or on a schedule to catch drift.
+version: 6
+description: Audit GPT/Codex context windows and max-output limits against live data; propose descriptor/catalog fixes. Use when limits look stale, after new OpenAI models ship, or on a schedule.
 ---
 
 # Model Limits Audit
@@ -77,6 +77,15 @@ this list as closed (new families like `gpt6.ts` appear without notice):
   pick a winner. Keep the repo value, annotate the conflict with both numbers
   and the date, and move on. A wrong "correction" truncates generations or
   invites 400s; an annotated conflict costs nothing.
+- Known-blocked: `vendors/openai.ts` gpt-5.5 catalog 272k → 1,050,000.
+  Live data supports it and per-route logic favors it, but
+  `src/utils/context.test.ts` asserts 272k on the default (routeless)
+  resolution path, so the change fails the suite today. Do NOT propose it —
+  not even under `--apply` — until the test asserts per-route (272k
+  Codex-route, 1,050,000 OpenAI-route) AND a route-leak check proves no
+  capped transport resolves through the OpenAI catalog. Status quo affirmed
+  2026-10-13 (operator decision: Codex-first usage, no direct-API need).
+  Revisit only via that checklist, never on a live-data diff alone.
 - NEVER add built-in limits to `src/utils/model/openaiContextWindows.ts` —
   that module is override plumbing only. One-off user pins go to `modelLimits`
   or `/set-context-window --save`.
