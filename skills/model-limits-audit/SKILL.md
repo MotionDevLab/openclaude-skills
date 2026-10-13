@@ -17,9 +17,17 @@ Primary: `https://openrouter.ai/api/v1/models` (public GET, no key).
 Relevant fields per entry: `id`, `context_length`,
 `top_provider.max_completion_tokens`.
 
-Cross-check: `https://platform.openai.com/docs/models` for ids missing from
-OpenRouter, and `https://api.openai.com/v1/models` for id existence only
-(that endpoint carries no limits).
+Full ladder when the primary lacks an id — check in order, first hit wins
+for context, but max-output needs two agreeing sources:
+`https://models.dev/api.json` (`limit.context`, `limit.output`),
+the LiteLLM mirror
+(`model_prices_and_context_window.json`: `max_input_tokens`,
+`max_output_tokens`), official per-model docs pages, then web search.
+`https://api.openai.com/v1/models` is id-existence only (carries no limits).
+
+For Codex-route numbers the authoritative source is OpenAI's own Codex
+bundled metadata (the `openai/codex` repo; precedent: PR #33972 set the 5.6
+family to 272,000) — not the API spec, which describes a different route.
 
 Normalize ids before joining: lowercase, strip any `openai/` prefix and any
 `?...` query suffix, drop `:batch` variants.
@@ -61,6 +69,10 @@ The resolver is `resolveModelRuntimeLimits` in
   flag for docs confirmation. Never invent limits.
 - Suspect guard: live value showing a drop over 50 percent or zero
   max-output is quarantined until docs confirm. Never write it.
+- Disagreeing live sources (e.g. one mirror says 32k, another 128k): do NOT
+  pick a winner. Keep the repo value, annotate the conflict with both numbers
+  and the date, and move on. A wrong "correction" truncates generations or
+  invites 400s; an annotated conflict costs nothing.
 - NEVER add built-in limits to `src/utils/model/openaiContextWindows.ts` —
   that module is override plumbing only. One-off user pins go to `modelLimits`
   or `/set-context-window --save`.
@@ -78,6 +90,10 @@ The resolver is `resolveModelRuntimeLimits` in
 6. Run the focused suites
    (`gpt56Catalog`, `runtimeMetadata.modelLimits`, `context`) and require
    green before finishing.
+7. Remind the operator to check shadowing overrides: a session
+   (`/set-context-window status`) or `modelLimits` pin outranks the tables on
+   routes with no catalog entry, so a stale personal pin can hide a corrected
+   table. Tables fixed + pin stale = job half done.
 
 ## Reference
 
